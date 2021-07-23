@@ -3,13 +3,7 @@ import React from "react";
 import {injectedConnector} from "../connector/connector";
 
 function Wallet() {
-    const { chainId, account, activate, active, library } = useWeb3React()
-    // const balance = account ? library.getBalance(account) : ""
-    //
-    // account && balance.then(
-    //     (result) => { alert(ethers.utils.formatEther(result)) }
-    // )
-
+    const { chainId, account, activate, active } = useWeb3React()
 
     const onClick = () => {
         activate(injectedConnector)
