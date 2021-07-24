@@ -1,7 +1,7 @@
-import {useWeb3React} from "@web3-react/core";
 import React from "react";
-import { Pair, Token, WETH } from "@uniswap/sdk"
+import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
+import { Pair, Token, WETH } from "@uniswap/sdk"
 import { UNI_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, PRIVATE_KEY } from "../constant";
 
 function SwapButton() {
