@@ -1,7 +1,7 @@
-import {useWeb3React} from "@web3-react/core";
 import React, {useState} from "react";
-import {injectedConnector} from "../connector/connector";
+import {useWeb3React} from "@web3-react/core";
 import { ethers } from "ethers"
+import {injectedConnector} from "../connector/connector";
 import { UNI_ABI, UNI_ADDRESS} from "../constant";
 
 function Wallet() {
@@ -19,7 +19,7 @@ function Wallet() {
         .then( (result) => setETHBalance(ethers.utils.formatEther(result)) ) // update eth balance
 
     library && tokenContract.balanceOf(account)
-        .then((result) => {setUNIBalance(ethers.utils.formatEther(result))}) // update token balance using balanceOf function in token contract
+        .then((result) => setUNIBalance(ethers.utils.formatEther(result))) // update token balance using balanceOf function in token contract
 
 
     const onClick = function () {
