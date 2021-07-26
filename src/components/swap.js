@@ -3,6 +3,7 @@ import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import { Pair, Token, WETH } from "@uniswap/sdk"
 import { UNI_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, PRIVATE_KEY } from "../constant";
+import store from '../store'
 
 function SwapButton() {
     const { chainId, account, active, library } = useWeb3React()
@@ -22,6 +23,14 @@ function SwapButton() {
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
 
         routerContract.swapExactETHForTokens(amountOutMin, path, to, deadline, {value: amountIn, gasLimit: 1000000})
+            .then( (result) => {
+                result.wait().then( () => {
+                    library && library.getBalance(account).then((result) => {
+                        console.log(ethers.utils.formatEther(result))
+                        store.dispatch({type: "UPDATE_ETH", value: ethers.utils.formatEther(result)})
+                    })
+                })
+            })
     }
 
     return (
