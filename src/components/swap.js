@@ -2,18 +2,15 @@ import React from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import { Pair, Token, WETH } from "@uniswap/sdk"
-import { UNI_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, PRIVATE_KEY } from "../constant";
+import { UNI_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI } from "../constant";
 import store from '../store'
 
 function SwapButton() {
     const { chainId, account, active, library } = useWeb3React()
 
-    /**
-     * @todo refactor by not using PRIVATE_KEY
-     */
     function swap(): Promise<Pair> {
-        const wallet = new ethers.Wallet(PRIVATE_KEY, library) // sign
-        const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, wallet) // create contract instance
+        const signer = library.getSigner(account).connectUnchecked()
+        const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
         const UNI = new Token(chainId, UNI_ADDRESS, 18) // Get UNI Token Instance
 
         const amountIn = '10000000000000000'
