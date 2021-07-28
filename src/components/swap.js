@@ -2,8 +2,9 @@ import React from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import { Pair, Token, WETH } from "@uniswap/sdk"
-import { UNI_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI } from "../constant";
+import {UNI_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, UNI_ABI} from "../constant";
 import store from '../store'
+import {updateETH, updateUNI} from "../actions";
 
 function SwapButton() {
     const { chainId, account, active, library } = useWeb3React()
@@ -11,8 +12,9 @@ function SwapButton() {
     function swap(): Promise<Pair> {
         const signer = library.getSigner(account).connectUnchecked()
         const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
-        const UNI = new Token(chainId, UNI_ADDRESS, 18) // Get UNI Token Instance
+        const tokenContract = new ethers.Contract(UNI_ADDRESS, UNI_ABI, library)
 
+        const UNI = new Token(chainId, UNI_ADDRESS, 18) // Get UNI Token Instance
         const amountIn = '10000000000000000'
         const amountOutMin = '0'
         const path = [WETH[UNI.chainId].address, UNI.address]
@@ -22,10 +24,10 @@ function SwapButton() {
         routerContract.swapExactETHForTokens(amountOutMin, path, to, deadline, {value: amountIn, gasLimit: 1000000})
             .then( (result) => {
                 result.wait().then( () => {
-                    library && library.getBalance(account).then((result) => {
-                        console.log(ethers.utils.formatEther(result))
-                        store.dispatch({type: "UPDATE_ETH", value: ethers.utils.formatEther(result)})
-                    })
+                    library && tokenContract.balanceOf(account)
+                        .then((result) => store.dispatch(updateUNI(ethers.utils.formatEther(result))))
+                    library && library.getBalance(account)
+                        .then((result) => store.dispatch(updateETH(ethers.utils.formatEther(result))))
                 })
             })
     }
