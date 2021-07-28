@@ -1,12 +1,6 @@
 import { createStore } from "redux";
+import rootReducer from "../reducers";
 
-export default createStore(function(state, action){
-    if(state === undefined) {
-        return { value:0 }
-    }
-    if(action.type === 'UPDATE_ETH') {
-        return {...state, value : action.value}
-    }
+const store = createStore(rootReducer)
 
-    return state;
-})
+export default store
