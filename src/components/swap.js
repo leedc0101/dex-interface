@@ -11,15 +11,15 @@ function SwapButton() {
 
     function swap(): Promise<Pair> {
         const signer = library.getSigner(account).connectUnchecked()
-        const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
+        const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
         const tokenContract = new ethers.Contract(UNI_ADDRESS, UNI_ABI, library)
 
-        const UNI = new Token(chainId, UNI_ADDRESS, 18) // Get UNI Token Instance
+        const UNI = new Token(chainId, UNI_ADDRESS, 18)
         const amountIn = '10000000000000000'
         const amountOutMin = '0'
         const path = [WETH[UNI.chainId].address, UNI.address]
-        const to = account // Send to myself
-        const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
+        const to = account
+        const deadline = Math.floor(Date.now() / 1000) + 60 * 20
 
         routerContract.swapExactETHForTokens(amountOutMin, path, to, deadline, {value: amountIn, gasLimit: 1000000})
             .then( (result) => {
