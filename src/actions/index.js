@@ -1,4 +1,4 @@
-import { UPDATE_UNI, UPDATE_ETH } from "../constant/action-types";
+import { UPDATE_UNI, UPDATE_ETH, UPDATE_LP } from "../constant/action-types";
 
 export const updateETH = ethBalance => ({
     type: UPDATE_ETH,
@@ -8,4 +8,9 @@ export const updateETH = ethBalance => ({
 export const updateUNI = uniBalance => ({
     type: UPDATE_UNI,
     uniBalance: uniBalance
+})
+
+export const updateLP = LPBalance => ({
+    type: UPDATE_LP,
+    LPBalance: LPBalance
 })
