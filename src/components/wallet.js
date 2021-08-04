@@ -2,12 +2,14 @@ import React from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from "ethers"
 import {injectedConnector} from "../connector/connector";
-import { CONTRACT_ABI, UNI_ADDRESS} from "../constant";
+import { ERC20_ABI, TOKEN_ADDRESS} from "../constant";
 import {updateETH, updateLP, updateUNI} from "../actions";
 import {FACTORY_ADDRESS, INIT_CODE_HASH, Token, WETH} from "@uniswap/sdk";
 import {getCreate2Address} from "@ethersproject/address";
 import {keccak256, pack} from "@ethersproject/solidity";
 import {useDispatch, useSelector} from "react-redux";
+import {Text, Wrap} from "./Style";
+import {AutoColumn} from "./Column";
 
 function Wallet() {
     const dispatch = useDispatch()
@@ -17,9 +19,9 @@ function Wallet() {
 
     const { chainId, account, activate, active, library } = useWeb3React()
 
-    const tokenContract = new ethers.Contract(UNI_ADDRESS, CONTRACT_ABI, library) // create token contract instance
+    const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, library) // create token contract instance
 
-    const tokenA = new Token(chainId, UNI_ADDRESS, 18)
+    const tokenA = new Token(chainId, TOKEN_ADDRESS, 18)
     const tokenB = new Token(chainId, WETH[active ? chainId : 3].address, 18)
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
     const pair = getCreate2Address(
@@ -28,7 +30,7 @@ function Wallet() {
         INIT_CODE_HASH
     )
 
-    const pairTokenContract = new ethers.Contract(pair, CONTRACT_ABI, library)
+    const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, library)
 
     library && library?.getBalance(account)
         .then( (result) => {
@@ -44,7 +46,6 @@ function Wallet() {
 
     library && pairTokenContract?.balanceOf(account)
         .then((result) => {
-            console.log(ethers.utils.formatEther(result))
             if(ethers.utils.formatEther(result) !== LPBalance)
                 dispatch(updateLP(ethers.utils.formatEther(result)))
         })
@@ -54,21 +55,21 @@ function Wallet() {
     }
 
     return (
-        <div>
-            <div>ChainId: {chainId}</div>
-            <div>Account: {account}</div>
-            <div>ETH Balance: {ethBalance}</div>
-            <div>UNI Balance: {uniBalance}</div>
-            <div>Liquidity Token Amount : {LPBalance}</div>
+        <Wrap>
+            <Text style={{marginTop:'15px'}}>ChainId: {chainId}</Text>
+            <Text style={{marginBottom:'15px'}}>Account: {account}</Text>
+            <Text>ETH Balance: {ethBalance}</Text>
+            <Text>UNI Balance: {uniBalance}</Text>
+            <Text>Liquidity Token Amount : {LPBalance}</Text>
             {active ? (
-                <div>Connected </div>
+                <Text style={{color:'green'}}>Connected </Text>
             ) : (
                 <button type="button" onClick={onClick}>
                     Connect
                 </button>
             )}
-        </div>
+        </Wrap>
     )
 }
 
-export default React.memo(Wallet)
+export default Wallet
