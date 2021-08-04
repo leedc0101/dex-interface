@@ -6,6 +6,7 @@ import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant"
 import {updateETH, updateUNI} from "../actions";
 import {useDispatch} from "react-redux";
 import {Text, Wrap} from "./Style";
+import {MaxUint256} from '@ethersproject/constants'
 
 function AddLiquidityButton() {
     const dispatch = useDispatch()
@@ -14,12 +15,12 @@ function AddLiquidityButton() {
     const [approved, setApproved] = useState(false)
     const [pending, setPending] = useState(false)
 
+    const signer = library?.getSigner(account).connectUnchecked()
+
     function approve() {
-        const signer = library.getSigner(account).connectUnchecked()
-        const amountTokenDesired = '1000000000000000' // 0.001 UNI
         const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer)
 
-        tokenContract.approve(ROUTER_ADDRESS, amountTokenDesired)
+        tokenContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
                 setPending(true)
                 result.wait().then(() => {
@@ -30,7 +31,6 @@ function AddLiquidityButton() {
     }
 
     function addLiquidity(): Promise<Pair> {
-        const signer = library.getSigner(account).connectUnchecked()
         const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
 
         const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, library)

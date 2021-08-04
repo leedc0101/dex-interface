@@ -8,6 +8,7 @@ import { pack, keccak256 } from "@ethersproject/solidity";
 import { getCreate2Address } from "@ethersproject/address";
 import {useDispatch, useSelector} from "react-redux";
 import {Text, Wrap} from "./Style";
+import {MaxUint256} from "@ethersproject/constants";
 
 function RemoveLiquidityButton() {
     const dispatch = useDispatch()
@@ -16,6 +17,8 @@ function RemoveLiquidityButton() {
 
     const [approved, setApproved] = useState(false)
     const [pending, setPending] = useState(false)
+
+    const signer = library?.getSigner(account).connectUnchecked()
 
     const tokenA = new Token(chainId, TOKEN_ADDRESS, 18)
     const tokenB = new Token(chainId, WETH[active ? chainId : 3].address, 18)
@@ -27,11 +30,9 @@ function RemoveLiquidityButton() {
     )
 
     function approve() {
-        const signer = library.getSigner(account).connectUnchecked()
-        const amountTokenDesired = LPBalance*(10**18)
         const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, signer)
 
-        pairTokenContract.approve(ROUTER_ADDRESS, amountTokenDesired)
+        pairTokenContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
                 setPending(true)
                 result.wait().then(() => {
@@ -42,7 +43,6 @@ function RemoveLiquidityButton() {
     }
 
     function removeLiquidity(): Promise<Pair> {
-        const signer = library.getSigner(account).connectUnchecked()
         const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
         const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, library)
 

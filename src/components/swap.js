@@ -47,6 +47,7 @@ function SwapButton() {
                     library && library.getBalance(account)
                         .then((result) => dispatch(updateETH(ethers.utils.formatEther(result))))
                     setPending(false)
+                    dispatch(updateInput('0'))
                 })
             })
     }
