@@ -1,20 +1,29 @@
 import React from 'react'
-import { Web3ReactProvider } from '@web3-react/core'
 import Wallet from "./components/wallet";
-import getLibrary from "./library/library";
 import SwapButton from "./components/swap";
 import AddLiquidityButton from "./components/addLiquidity";
 import RemoveLiquidityButton from "./components/removeLiquidity";
+import {AutoColumn} from "./components/Column";
+import styled from 'styled-components'
 
+
+
+const Wrap = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+`
 
 function App() {
     return (
-        <Web3ReactProvider getLibrary={getLibrary}>
-            <Wallet />
-            <SwapButton/>
-            <AddLiquidityButton/>
-            <RemoveLiquidityButton/>
-        </Web3ReactProvider>
+        <Wrap>
+            <AutoColumn gap={"lg"}>
+                <Wallet />
+                <SwapButton/>
+                <AddLiquidityButton/>
+                <RemoveLiquidityButton/>
+            </AutoColumn>
+        </Wrap>
     )
 }
 
