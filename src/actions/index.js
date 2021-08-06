@@ -1,4 +1,12 @@
-import {UPDATE_UNI, UPDATE_ETH, UPDATE_LP, UPDATE_INPUT, UPDATE_OUTPUT, UPDATE_EXPECT} from "../constant/action-types";
+import {
+    UPDATE_UNI,
+    UPDATE_ETH,
+    UPDATE_LP,
+    UPDATE_SWAP_INPUT,
+    UPDATE_SWAP_OUTPUT,
+    UPDATE_SWAP_EXPECT,
+    UPDATE_ADD_INPUT, UPDATE_ADD_INPUT_2
+} from "../constant/action-types";
 
 export const updateETH = ethBalance => ({
     type: UPDATE_ETH,
@@ -15,17 +23,27 @@ export const updateLP = LPBalance => ({
     LPBalance: LPBalance
 })
 
-export const updateInput = input => ({
-    type: UPDATE_INPUT,
-    input: input
+export const updateSwapInput = swapInput => ({
+    type: UPDATE_SWAP_INPUT,
+    swapInput: swapInput
 })
 
-export const updateOutput = output => ({
-    type: UPDATE_OUTPUT,
-    output: output
+export const updateSwapOutput = swapOutput => ({
+    type: UPDATE_SWAP_OUTPUT,
+    swapOutput: swapOutput
 })
 
-export const updateExpect = expect => ({
-    type: UPDATE_EXPECT,
-    expect: expect
+export const updateSwapExpect = swapExpect => ({
+    type: UPDATE_SWAP_EXPECT,
+    swapExpect: swapExpect
+})
+
+export const updateAddInput = addInput => ({
+    type: UPDATE_ADD_INPUT,
+    addInput: addInput
+})
+
+export const updateAddInput2 = addInput2 => ({
+    type: UPDATE_ADD_INPUT_2,
+    addInput2: addInput2
 })

@@ -1,12 +1,22 @@
-import {UPDATE_ETH, UPDATE_UNI, UPDATE_LP, UPDATE_OUTPUT, UPDATE_INPUT, UPDATE_EXPECT} from "../constant/action-types";
+import {
+    UPDATE_ETH,
+    UPDATE_UNI,
+    UPDATE_LP,
+    UPDATE_SWAP_OUTPUT,
+    UPDATE_SWAP_INPUT,
+    UPDATE_SWAP_EXPECT,
+    UPDATE_ADD_INPUT_2, UPDATE_ADD_INPUT
+} from "../constant/action-types";
 
 const initialState = {
     ethBalance: "0",
     uniBalance: "0",
     LPBalance: "0",
-    input: "0",
-    output: "0",
-    expect: "0",
+    swapInput: "0",
+    swapOutput: "0",
+    swapExpect: "0",
+    addInput: "0",
+    addInput2: "0"
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -17,12 +27,16 @@ const rootReducer = (state = initialState, action) => {
             return {...state, uniBalance : action.uniBalance}
         case UPDATE_LP:
             return {...state, LPBalance : action.LPBalance}
-        case UPDATE_INPUT:
-            return {...state, input : action.input}
-        case UPDATE_OUTPUT:
-            return {...state, output : action.output}
-        case UPDATE_EXPECT:
-            return {...state, expect: action.expect}
+        case UPDATE_SWAP_INPUT:
+            return {...state, swapInput : action.swapInput}
+        case UPDATE_SWAP_OUTPUT:
+            return {...state, swapOutput : action.swapOutput}
+        case UPDATE_SWAP_EXPECT:
+            return {...state, swapExpect: action.swapExpect}
+        case UPDATE_ADD_INPUT_2:
+            return {...state, addInput2: action.addInput2}
+        case UPDATE_ADD_INPUT:
+            return {...state, addInput: action.addInput}
     }
 }
 

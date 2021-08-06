@@ -3,7 +3,7 @@ import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import { Pair, WETH } from "@uniswap/sdk"
 import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
-import {updateETH, updateExpect, updateInput, updateOutput, updateUNI} from "../actions";
+import {updateETH, updateSwapExpect, updateSwapInput, updateUNI} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
 import {Text, Wrap} from "./Style";
 
@@ -11,8 +11,8 @@ function SwapButton() {
     const dispatch = useDispatch()
     const { chainId, account, active, library } = useWeb3React()
     const [pending, setPending] = useState(false)
-    const input = useSelector(state => state?.input)
-    const expect = useSelector(state => state?.expect)
+    const input = useSelector(state => state?.swapInput)
+    const expect = useSelector(state => state?.swapExpect)
 
     // Todo
     // const output = useSelector(state => state?.output)
@@ -30,14 +30,13 @@ function SwapButton() {
     if(amountIn !== undefined && !amountIn.eq(0)){
         routerContract.getAmountsOut(amountIn, path, {gasLimit:10000000})
             .then((result)=>{
-                dispatch(updateExpect(ethers.utils.formatEther(result[1])))
+                dispatch(updateSwapExpect(ethers.utils.formatEther(result[1])))
             })
     } else {
-        dispatch(updateExpect('0'))
+        dispatch(updateSwapExpect('0'))
     }
 
     function swap(): Promise<Pair> {
-
         routerContract.swapExactETHForTokens(amountOutMin, path, to, deadline, {value: amountIn, gasLimit: 1000000})
             .then( (result) => {
                 setPending(true)
@@ -47,16 +46,16 @@ function SwapButton() {
                     library && library.getBalance(account)
                         .then((result) => dispatch(updateETH(ethers.utils.formatEther(result))))
                     setPending(false)
-                    dispatch(updateInput('0'))
+                    dispatch(updateSwapInput('0'))
                 })
             })
     }
 
     function inputOnChange(e){
         if(e.target.value.length !== 0)
-            dispatch(updateInput(e.target.value))
+            dispatch(updateSwapInput(e.target.value))
         else
-            dispatch(updateInput('0'))
+            dispatch(updateSwapInput('0'))
     }
 
     // Todo
