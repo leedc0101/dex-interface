@@ -7,7 +7,7 @@ import {updateETH, updateUNI} from "../actions";
 import { pack, keccak256 } from "@ethersproject/solidity";
 import { getCreate2Address } from "@ethersproject/address";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./Style";
+import {Text, Wrap} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 
 function RemoveLiquidityButton() {
@@ -29,9 +29,15 @@ function RemoveLiquidityButton() {
         INIT_CODE_HASH
     )
 
-    function approve() {
-        const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, signer)
+    const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, signer)
 
+    library && pairTokenContract.allowance(account, ROUTER_ADDRESS)
+        .then(result => {
+            if( result >= MaxUint256.div(100))
+                setApproved(true)
+        })
+
+    function approve() {
         pairTokenContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
                 setPending(true)
@@ -47,7 +53,7 @@ function RemoveLiquidityButton() {
         const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, library)
 
         const token = TOKEN_ADDRESS
-        const amountTokenDesired = LPBalance*(10**18)
+        const amountTokenDesired = ethers.utils.parseEther(LPBalance)
         const amountTokenMin = '0'
         const amountETHMin = '0'
         const to = account // Send to myself

@@ -5,7 +5,7 @@ import { Pair } from "@uniswap/sdk"
 import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import { updateAddInput, updateAddInput2, updateETH, updateUNI} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./Style";
+import {Text, Wrap} from "./style";
 import {MaxUint256} from '@ethersproject/constants'
 
 function AddLiquidityButton() {
@@ -30,6 +30,12 @@ function AddLiquidityButton() {
     const to = account // Send to myself
     const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
 
+    library && tokenContract.allowance(account, ROUTER_ADDRESS)
+        .then(result => {
+            if( result >= MaxUint256.div(100))
+                setApproved(true)
+        })
+
     function approve() {
         tokenContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
@@ -46,7 +52,6 @@ function AddLiquidityButton() {
             .then( (result) => {
                 setPending(true)
                 result.wait().then( () => {
-                    console.log(result)
                     tokenContract.balanceOf(account)
                         .then((result) => dispatch(updateUNI(ethers.utils.formatEther(result))))
                     library.getBalance(account)
@@ -75,11 +80,7 @@ function AddLiquidityButton() {
             <Text>
                 ------Add Liquidity------
             </Text>
-            { !pending ? (active && (approved ? (
-                < button style={{color:"green"}} type="add-button" onClick={addLiquidity}>
-                    Add Liquidity
-                </button>
-            ) : (
+            { !pending ? (active ? (
                 <>
                     <form>
                         <label>
@@ -97,11 +98,19 @@ function AddLiquidityButton() {
                             </Text>
                         </label>
                     </form>
-                    <button style={{color:"red"}} type="approve-button" onClick={approve}>
-                        Approve
-                    </button>
+                    { approved ? (
+                        <button style={{color:"green"}} type="button" onClick={addLiquidity}>
+                            Add Liquidity
+                        </button>
+                    ):(
+                        <button style={{color:"red"}} type="button" onClick={approve}>
+                            Approve
+                        </button>
+                    )}
                 </>
-            ))) : (
+            ) : (
+                <></>
+            )) : (
                 <button style={{color:"pink"}}>
                     Pending...
                 </button>
