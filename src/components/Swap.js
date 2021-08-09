@@ -5,12 +5,14 @@ import { Pair, WETH } from "@uniswap/sdk"
 import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import {updateETH, updateSwapExpect, updateSwapInput, updateUNI} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./Style";
+import {Text, Wrap} from "./style";
+import {MaxUint256} from "@ethersproject/constants";
 
 function SwapButton() {
     const dispatch = useDispatch()
     const { chainId, account, active, library } = useWeb3React()
     const [pending, setPending] = useState(false)
+    const [approved, setApproved] = useState(false)
     const input = useSelector(state => state?.swapInput)
     const expect = useSelector(state => state?.swapExpect)
 
@@ -34,6 +36,23 @@ function SwapButton() {
             })
     } else {
         dispatch(updateSwapExpect('0'))
+    }
+
+    library && tokenContract.allowance(account, ROUTER_ADDRESS)
+        .then(result => {
+            if( result >= MaxUint256.div(100))
+                setApproved(true)
+        })
+
+    function approve() {
+        tokenContract.approve(ROUTER_ADDRESS, MaxUint256)
+            .then((result) => {
+                setPending(true)
+                result.wait().then(() => {
+                    setPending(false)
+                    setApproved(true)
+                })
+            })
     }
 
     function swap(): Promise<Pair> {
@@ -78,20 +97,18 @@ function SwapButton() {
                             </Text>
                         </label>
                     </form>
-                    {/*<form>*/}
-                    {/*    <label>*/}
-                    {/*        <Text>*/}
-                    {/*            Output(UNI) :*/}
-                    {/*            <input type="text" onChange={outputOnChange}/>*/}
-                    {/*        </Text>*/}
-                    {/*    </label>*/}
-                    {/*</form>*/}
                     <Text>
                         예상 Output(UNI) : {expect}
                     </Text>
-                    <button type="button" onClick={swap}>
-                        Swap
-                    </button>
+                    { approved ? (
+                        <button style={{color:"green"}} type="button" onClick={swap}>
+                            Swap
+                        </button>
+                    ):(
+                        <button style={{color:"red"}} type="button" onClick={approve}>
+                            Approve
+                        </button>
+                    )}
                 </>
             ) : (
                 <></>
