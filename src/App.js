@@ -1,10 +1,11 @@
 import React from 'react'
-import Wallet from "./components/wallet";
-import SwapButton from "./components/swap";
-import AddLiquidityButton from "./components/addLiquidity";
-import RemoveLiquidityButton from "./components/removeLiquidity";
+import Wallet from "./components/Wallet";
+import SwapButton from "./components/Swap";
+import AddLiquidityButton from "./components/AddLiquidity";
+import RemoveLiquidityButton from "./components/RemoveLiquidity";
 import {AutoColumn} from "./components/Column";
 import styled from 'styled-components'
+import LiquidityInfo from "./components/LiquidityInfo";
 
 
 
