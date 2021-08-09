@@ -8,8 +8,7 @@ import {FACTORY_ADDRESS, INIT_CODE_HASH, Token, WETH} from "@uniswap/sdk";
 import {getCreate2Address} from "@ethersproject/address";
 import {keccak256, pack} from "@ethersproject/solidity";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./Style";
-import {AutoColumn} from "./Column";
+import {Text, Wrap} from "./style";
 
 function Wallet() {
     const dispatch = useDispatch()
@@ -22,7 +21,7 @@ function Wallet() {
     const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, library) // create token contract instance
 
     const tokenA = new Token(chainId, TOKEN_ADDRESS, 18)
-    const tokenB = new Token(chainId, WETH[active ? chainId : 3].address, 18)
+    const tokenB = new Token(chainId, WETH[active ? chainId : 3].address, 6)
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
     const pair = getCreate2Address(
         FACTORY_ADDRESS,
@@ -41,7 +40,7 @@ function Wallet() {
     library && tokenContract?.balanceOf(account)
         .then((result) => {
             if(ethers.utils.formatEther(result) !== uniBalance)
-                dispatch(updateUNI(ethers.utils.formatEther(result)))
+                dispatch(updateUNI(ethers.utils.formatUnits(result,6)))
         }) // update token balance using balanceOf function in token contract
 
     library && pairTokenContract?.balanceOf(account)
