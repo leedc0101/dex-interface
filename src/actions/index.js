@@ -7,7 +7,7 @@ import {
     UPDATE_SWAP_EXPECT,
     UPDATE_ADD_INPUT,
     UPDATE_ADD_INPUT_2,
-    UPDATE_TOKEN_ADDRESS
+    UPDATE_INPUT_TOKEN_ADDRESS, UPDATE_OUTPUT_TOKEN_ADDRESS
 } from "../constant/action-types";
 
 export const updateETH = ethBalance => ({
@@ -50,7 +50,12 @@ export const updateAddInput2 = addInput2 => ({
     addInput2: addInput2
 })
 
-export const updateTokenAddress = tokenAddress => ({
-    type: UPDATE_TOKEN_ADDRESS,
-    tokenAddress: tokenAddress
+export const updateInputTokenAddress = inputTokenAddress => ({
+    type: UPDATE_INPUT_TOKEN_ADDRESS,
+    inputTokenAddress: inputTokenAddress
+})
+
+export const updateOutputTokenAddress = outputTokenAddress => ({
+    type: UPDATE_OUTPUT_TOKEN_ADDRESS,
+    outputTokenAddress: outputTokenAddress
 })

@@ -5,7 +5,10 @@ import {
     UPDATE_SWAP_OUTPUT,
     UPDATE_SWAP_INPUT,
     UPDATE_SWAP_EXPECT,
-    UPDATE_ADD_INPUT_2, UPDATE_ADD_INPUT, UPDATE_TOKEN_ADDRESS
+    UPDATE_ADD_INPUT_2,
+    UPDATE_ADD_INPUT,
+    UPDATE_OUTPUT_TOKEN_ADDRESS,
+    UPDATE_INPUT_TOKEN_ADDRESS
 } from "../constant/action-types";
 
 const initialState = {
@@ -17,7 +20,8 @@ const initialState = {
     swapExpect: "0",
     addInput: "0",
     addInput2: "0",
-    tokenAddress: ""
+    inputTokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+    outputTokenAddress: "0x110a13FC3efE6A245B50102D2d79B3E76125Ae83"
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -38,8 +42,10 @@ const rootReducer = (state = initialState, action) => {
             return {...state, addInput2: action.addInput2}
         case UPDATE_ADD_INPUT:
             return {...state, addInput: action.addInput}
-        case UPDATE_TOKEN_ADDRESS:
-            return {...state, tokenAddress: action.tokenAddress}
+        case UPDATE_INPUT_TOKEN_ADDRESS:
+            return {...state, inputTokenAddress: action.inputTokenAddress}
+        case UPDATE_OUTPUT_TOKEN_ADDRESS:
+            return {...state, outputTokenAddress: action.outputTokenAddress}
     }
 }
 
