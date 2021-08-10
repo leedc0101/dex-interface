@@ -5,12 +5,12 @@ import { Pair } from "@uniswap/sdk"
 import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import { updateAddInput, updateAddInput2, updateETH, updateUNI} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./style";
+import {BorderWrap, Text} from "./style";
 import {MaxUint256} from '@ethersproject/constants'
 
 function AddLiquidityButton() {
     const dispatch = useDispatch()
-    const { account, active, library } = useWeb3React()
+    const { account, library } = useWeb3React()
 
     const [approved, setApproved] = useState(false)
     const [pending, setPending] = useState(false)
@@ -30,7 +30,7 @@ function AddLiquidityButton() {
     const to = account // Send to myself
     const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
 
-    library && tokenContract.allowance(account, ROUTER_ADDRESS)
+    tokenContract.allowance(account, ROUTER_ADDRESS)
         .then(result => {
             if( result >= MaxUint256.div(100))
                 setApproved(true)
@@ -76,11 +76,11 @@ function AddLiquidityButton() {
     }
 
     return (
-        <Wrap style={{marginTop:"10px"}}>
+        <BorderWrap>
             <Text>
                 ------Add Liquidity------
             </Text>
-            { !pending ? (active ? (
+            { !pending ? (
                 <>
                     <form>
                         <label>
@@ -109,13 +109,11 @@ function AddLiquidityButton() {
                     )}
                 </>
             ) : (
-                <></>
-            )) : (
                 <button style={{color:"pink"}}>
                     Pending...
                 </button>
             )}
-        </Wrap>
+        </BorderWrap>
     )
 }
 

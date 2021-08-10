@@ -5,12 +5,12 @@ import { Pair, WETH } from "@uniswap/sdk"
 import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import {updateETH, updateSwapExpect, updateSwapInput, updateUNI} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./style";
+import {BorderWrap, Text} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 
 function SwapButton() {
     const dispatch = useDispatch()
-    const { chainId, account, active, library } = useWeb3React()
+    const { chainId, account, library } = useWeb3React()
     const [pending, setPending] = useState(false)
     const [approved, setApproved] = useState(false)
     const input = useSelector(state => state?.swapInput)
@@ -19,8 +19,8 @@ function SwapButton() {
     // Todo
     // const output = useSelector(state => state?.output)
 
-    const signer = library ? library.getSigner(account).connectUnchecked() : undefined
-    const routerContract = library ? new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) : undefined // create contract instance
+    const signer = library.getSigner(account).connectUnchecked()
+    const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
     const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, library)
 
     const amountIn = input !== undefined ? ethers.utils.parseEther(input) : undefined
@@ -38,7 +38,7 @@ function SwapButton() {
         dispatch(updateSwapExpect('0'))
     }
 
-    library && tokenContract.allowance(account, ROUTER_ADDRESS)
+    tokenContract.allowance(account, ROUTER_ADDRESS)
         .then(result => {
             if( result >= MaxUint256.div(100))
                 setApproved(true)
@@ -83,11 +83,11 @@ function SwapButton() {
     // }
 
     return (
-        <Wrap style={{marginTop:"10px"}}>
+        <BorderWrap style={{marginTop:"10px", border:"2px solid"}}>
             <Text>
                 ------Swap------
             </Text>
-            { !pending ? (active ? (
+            { !pending ? (
                 <>
                     <form>
                         <label>
@@ -111,13 +111,11 @@ function SwapButton() {
                     )}
                 </>
             ) : (
-                <></>
-            )) : (
                 <Text>
                     Pending...
                 </Text>
             )}
-        </Wrap>
+        </BorderWrap>
     )
 }
 

@@ -7,13 +7,13 @@ import {updateETH, updateUNI} from "../actions";
 import { pack, keccak256 } from "@ethersproject/solidity";
 import { getCreate2Address } from "@ethersproject/address";
 import {useDispatch, useSelector} from "react-redux";
-import {Text, Wrap} from "./style";
+import {BorderWrap, Text} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 
 function RemoveLiquidityButton() {
     const dispatch = useDispatch()
     const LPBalance = useSelector((state) => state?.LPBalance )
-    const { chainId, account, active, library } = useWeb3React()
+    const { chainId, account, library } = useWeb3React()
 
     const [approved, setApproved] = useState(false)
     const [pending, setPending] = useState(false)
@@ -21,7 +21,7 @@ function RemoveLiquidityButton() {
     const signer = library?.getSigner(account).connectUnchecked()
 
     const tokenA = new Token(chainId, TOKEN_ADDRESS, 18)
-    const tokenB = new Token(chainId, WETH[active ? chainId : 3].address, 18)
+    const tokenB = new Token(chainId, WETH[chainId].address, 18)
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
     const pair = getCreate2Address(
         FACTORY_ADDRESS,
@@ -31,7 +31,7 @@ function RemoveLiquidityButton() {
 
     const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, signer)
 
-    library && pairTokenContract.allowance(account, ROUTER_ADDRESS)
+    pairTokenContract.allowance(account, ROUTER_ADDRESS)
         .then(result => {
             if( result >= MaxUint256.div(100))
                 setApproved(true)
@@ -73,11 +73,11 @@ function RemoveLiquidityButton() {
     }
 
     return (
-        <Wrap style={{marginTop:"10px"}}>
+        <BorderWrap>
             <Text>
                 ------Remove Liquidity------
             </Text>
-            { !pending ? (active && (approved ? (
+            { !pending ?  (approved ? (
                 <button style={{color:"green"}} type="button" onClick={removeLiquidity}>
                     Remove Liquidity
                 </button>
@@ -85,12 +85,12 @@ function RemoveLiquidityButton() {
                 <button style={{color:"red"}} type="button" onClick={approve}>
                     Approve
                 </button>
-            ))) : (
+            )) : (
                 <button style={{color:"pink"}} >
                     Pending...
                 </button>
             )}
-        </Wrap>
+        </BorderWrap>
     )
 }
 
