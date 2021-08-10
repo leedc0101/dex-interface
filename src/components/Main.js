@@ -1,8 +1,11 @@
 import React from "react";
 import {useWeb3React} from "@web3-react/core";
 import {injectedConnector} from "../connector/connector";
-import {Text} from "./style";
-import Balance from "./Balance";
+import {Text, Wrap} from "./style";
+import Account from "./Account";
+import SwapButton from "./Swap";
+import AddLiquidityButton from "./AddLiquidity";
+import RemoveLiquidityButton from "./RemoveLiquidity";
 
 
 function Hero() {
@@ -18,7 +21,12 @@ function Hero() {
                 Dong Chang Swap
             </Text>
             {library ? (
-                <Balance/>
+                <Wrap style={{gap:"30px"}}>
+                    <Account/>
+                    <SwapButton/>
+                    <AddLiquidityButton/>
+                    <RemoveLiquidityButton/>
+                </Wrap>
             ) : (
                 <button type="button" onClick={onClick}>
                     Connect
