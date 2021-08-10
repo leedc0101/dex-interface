@@ -5,7 +5,7 @@ import {
     UPDATE_SWAP_OUTPUT,
     UPDATE_SWAP_INPUT,
     UPDATE_SWAP_EXPECT,
-    UPDATE_ADD_INPUT_2, UPDATE_ADD_INPUT
+    UPDATE_ADD_INPUT_2, UPDATE_ADD_INPUT, UPDATE_TOKEN_ADDRESS
 } from "../constant/action-types";
 
 const initialState = {
@@ -16,7 +16,8 @@ const initialState = {
     swapOutput: "0",
     swapExpect: "0",
     addInput: "0",
-    addInput2: "0"
+    addInput2: "0",
+    tokenAddress: ""
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -37,6 +38,8 @@ const rootReducer = (state = initialState, action) => {
             return {...state, addInput2: action.addInput2}
         case UPDATE_ADD_INPUT:
             return {...state, addInput: action.addInput}
+        case UPDATE_TOKEN_ADDRESS:
+            return {...state, tokenAddress: action.tokenAddress}
     }
 }
 
