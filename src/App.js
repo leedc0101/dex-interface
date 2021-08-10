@@ -1,11 +1,10 @@
 import React from 'react'
-import Wallet from "./components/Wallet";
+import Hero from "./components/Hero";
 import SwapButton from "./components/Swap";
 import AddLiquidityButton from "./components/AddLiquidity";
 import RemoveLiquidityButton from "./components/RemoveLiquidity";
 import {AutoColumn} from "./components/Column";
 import styled from 'styled-components'
-import LiquidityInfo from "./components/LiquidityInfo";
 
 
 
@@ -19,7 +18,7 @@ function App() {
     return (
         <Wrap>
             <AutoColumn gap={"lg"}>
-                <Wallet />
+                <Hero />
                 <SwapButton/>
                 <AddLiquidityButton/>
                 <RemoveLiquidityButton/>
