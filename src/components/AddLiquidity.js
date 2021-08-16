@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import { Pair } from "@uniswap/sdk"
-import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
-import { updateAddInput, updateAddInput2, updateETH, updateUNI} from "../actions";
+import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
+import { updateAddInput, updateAddInput2, updateTokenA, updateTokenB} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
 import {BorderWrap, Text} from "./style";
 import {MaxUint256} from '@ethersproject/constants'
@@ -17,12 +17,14 @@ function AddLiquidityButton() {
 
     const input = useSelector(state => state?.addInput)
     const input2 = useSelector(state => state?.addInput2)
+    const tokenBAddress = useSelector(state => state?.tokenBAddress)
+    console.log(tokenBAddress)
 
     const signer = library?.getSigner(account).connectUnchecked()
-    const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer)
+    const tokenContract = new ethers.Contract(tokenBAddress, ERC20_ABI, signer)
     const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
 
-    const token = TOKEN_ADDRESS
+    const token = tokenBAddress
     const amountIn = input !== undefined ? ethers.utils.parseEther(input) : undefined
     const amountTokenDesired = input2 !== undefined ? ethers.utils.parseEther(input2) : undefined
     const amountTokenMin = '0'
@@ -53,9 +55,9 @@ function AddLiquidityButton() {
                 setPending(true)
                 result.wait().then( () => {
                     tokenContract.balanceOf(account)
-                        .then((result) => dispatch(updateUNI(ethers.utils.formatEther(result))))
+                        .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
                     library.getBalance(account)
-                        .then((result) => dispatch(updateETH(ethers.utils.formatEther(result))))
+                        .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
                     setPending(false)
                 })
             })
@@ -85,7 +87,7 @@ function AddLiquidityButton() {
                     <form>
                         <label>
                             <Text>
-                                ETH Input :
+                                Token A Input :
                                 <input type="text" onChange={inputOnChange}/>
                             </Text>
                         </label>
@@ -93,7 +95,7 @@ function AddLiquidityButton() {
                     <form>
                         <label>
                             <Text>
-                                UNI Input :
+                                Token B Input :
                                 <input type="text" onChange={inputOnChange2}/>
                             </Text>
                         </label>
