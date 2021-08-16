@@ -1,4 +1,4 @@
-import {Text} from "./style";
+import {BorderWrap, Text} from "./style";
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useWeb3React} from "@web3-react/core";
@@ -7,57 +7,62 @@ import {ERC20_ABI} from "../constant";
 import {FACTORY_ADDRESS, INIT_CODE_HASH, Token, WETH} from "@uniswap/sdk";
 import {getCreate2Address} from "@ethersproject/address";
 import {keccak256, pack} from "@ethersproject/solidity";
-import {updateETH, updateLP, updateUNI} from "../actions";
+import {updateTokenA, updateLP, updateTokenB} from "../actions";
 
 function TokenBalance() {
     const dispatch = useDispatch()
-    const ethBalance = useSelector((state) => state?.ethBalance )
-    const uniBalance = useSelector((state) => state?.uniBalance )
+    const tokenABalance = useSelector((state) => state?.tokenABalance )
+    const tokenBBalance = useSelector((state) => state?.tokenBBalance )
     const LPBalance = useSelector((state) => state?.LPBalance )
-    const inputTokenAddress = useSelector(state => state?.inputTokenAddress)
-    const outputTokenAddress = useSelector(state => state?.outputTokenAddress)
+    const tokenAAddress = useSelector(state => state?.tokenAAddress)
+    const tokenBAddress = useSelector(state => state?.tokenBAddress)
 
 
     const { chainId, account, library } = useWeb3React()
 
-    const tokenContract = new ethers.Contract(outputTokenAddress, ERC20_ABI, library) // create token contract instance
+    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, library)
+    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, library)
 
-    const tokenA = new Token(chainId, outputTokenAddress, 18)
-    const tokenB = new Token(chainId, WETH[chainId].address, 18)
+    const tokenA = tokenAContract === undefined ? new Token(chainId, WETH[chainId].address, 18) : new Token(chainId, tokenAAddress, 18)
+    const tokenB = tokenBContract === undefined ? new Token(chainId, WETH[chainId].address, 18) : new Token(chainId, tokenBAddress, 18)
+
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
     const pair = getCreate2Address(
         FACTORY_ADDRESS,
         keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
         INIT_CODE_HASH
     )
-
+    console.log(pair)
     const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, library)
 
-    library?.getBalance(account)
-        .then( (result) => {
-            if(ethers.utils.formatEther(result) !== ethBalance)
-                dispatch(updateETH(ethers.utils.formatEther(result)))
-        }) // update eth balance
+    if(tokenAAddress !== WETH[chainId].address)
+        tokenAContract.balanceOf(account)
+            .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
+    else
+        library.getBalance(account)
+            .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
 
-    tokenContract?.balanceOf(account)
-        .then((result) => {
-            if(ethers.utils.formatEther(result) !== uniBalance)
-                dispatch(updateUNI(ethers.utils.formatUnits(result,6)))
-        }) // update token balance using balanceOf function in token contract
+    if(tokenBAddress !== WETH[chainId].address)
+        tokenBContract.balanceOf(account)
+            .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
+    else
+        library.getBalance(account)
+            .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
 
     pairTokenContract?.balanceOf(account)
         .then((result) => {
+            console.log(result)
             if(ethers.utils.formatEther(result) !== LPBalance)
                 dispatch(updateLP(ethers.utils.formatEther(result)))
         })
 
     return (
-        <>
+        <BorderWrap>
             <Text>-----Balance Info-----</Text>
-            <Text>ETH Balance: {ethBalance}</Text>
-            <Text>Token Balance: {uniBalance}</Text>
+            <Text>Token A Balance: {tokenABalance}</Text>
+            <Text>Token B Balance: {tokenBBalance}</Text>
             <Text>Liquidity Token Amount : {LPBalance}</Text>
-        </>
+        </BorderWrap>
     )
 }
 
