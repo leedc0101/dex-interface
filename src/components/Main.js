@@ -3,12 +3,12 @@ import {useWeb3React} from "@web3-react/core";
 import {injectedConnector} from "../connector/connector";
 import {Text, Wrap} from "./style";
 import Account from "./Account";
-import SwapButton from "./Swap";
+import Swap from "./Swap";
 import AddLiquidityButton from "./AddLiquidity";
 import RemoveLiquidityButton from "./RemoveLiquidity";
 
 
-function Hero() {
+function Main() {
     const { library, activate } = useWeb3React()
 
     const onClick = function () {
@@ -23,7 +23,7 @@ function Hero() {
             {library ? (
                 <Wrap style={{gap:"30px"}}>
                     <Account/>
-                    <SwapButton/>
+                    <Swap/>
                     <AddLiquidityButton/>
                     <RemoveLiquidityButton/>
                 </Wrap>
@@ -36,4 +36,4 @@ function Hero() {
     )
 }
 
-export default Hero
+export default Main
