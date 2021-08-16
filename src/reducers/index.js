@@ -1,35 +1,35 @@
 import {
-    UPDATE_ETH,
-    UPDATE_UNI,
+    UPDATE_TOKEN_A,
+    UPDATE_TOKEN_B,
     UPDATE_LP,
     UPDATE_SWAP_OUTPUT,
     UPDATE_SWAP_INPUT,
     UPDATE_SWAP_EXPECT,
     UPDATE_ADD_INPUT_2,
     UPDATE_ADD_INPUT,
-    UPDATE_OUTPUT_TOKEN_ADDRESS,
-    UPDATE_INPUT_TOKEN_ADDRESS
+    UPDATE_TOKEN_B_ADDRESS,
+    UPDATE_TOKEN_A_ADDRESS
 } from "../constant/action-types";
 
 const initialState = {
-    ethBalance: "0",
-    uniBalance: "0",
+    tokenABalance: "0",
+    tokenBBalance: "0",
     LPBalance: "0",
     swapInput: "0",
     swapOutput: "0",
     swapExpect: "0",
     addInput: "0",
     addInput2: "0",
-    inputTokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
-    outputTokenAddress: "0x110a13FC3efE6A245B50102D2d79B3E76125Ae83"
+    tokenAAddress: "",
+    tokenBAddress: ""
 }
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
-        case UPDATE_ETH:
-            return {...state, ethBalance : action.ethBalance}
-        case UPDATE_UNI:
-            return {...state, uniBalance : action.uniBalance}
+        case UPDATE_TOKEN_A:
+            return {...state, tokenABalance : action.tokenABalance}
+        case UPDATE_TOKEN_B:
+            return {...state, tokenBBalance : action.tokenBBalance}
         case UPDATE_LP:
             return {...state, LPBalance : action.LPBalance}
         case UPDATE_SWAP_INPUT:
@@ -42,10 +42,12 @@ const rootReducer = (state = initialState, action) => {
             return {...state, addInput2: action.addInput2}
         case UPDATE_ADD_INPUT:
             return {...state, addInput: action.addInput}
-        case UPDATE_INPUT_TOKEN_ADDRESS:
-            return {...state, inputTokenAddress: action.inputTokenAddress}
-        case UPDATE_OUTPUT_TOKEN_ADDRESS:
-            return {...state, outputTokenAddress: action.outputTokenAddress}
+        case UPDATE_TOKEN_A_ADDRESS:
+            return {...state, tokenAAddress: action.tokenAAddress}
+        case UPDATE_TOKEN_B_ADDRESS:
+            return {...state, tokenBAddress: action.tokenBAddress}
+        default:
+            return state
     }
 }
 

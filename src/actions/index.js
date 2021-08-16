@@ -1,23 +1,23 @@
 import {
-    UPDATE_UNI,
-    UPDATE_ETH,
+    UPDATE_TOKEN_B,
+    UPDATE_TOKEN_A,
     UPDATE_LP,
     UPDATE_SWAP_INPUT,
     UPDATE_SWAP_OUTPUT,
     UPDATE_SWAP_EXPECT,
     UPDATE_ADD_INPUT,
     UPDATE_ADD_INPUT_2,
-    UPDATE_INPUT_TOKEN_ADDRESS, UPDATE_OUTPUT_TOKEN_ADDRESS
+    UPDATE_TOKEN_A_ADDRESS, UPDATE_TOKEN_B_ADDRESS
 } from "../constant/action-types";
 
-export const updateETH = ethBalance => ({
-    type: UPDATE_ETH,
-    ethBalance: ethBalance
+export const updateTokenA = tokenABalance => ({
+    type: UPDATE_TOKEN_A,
+    tokenABalance: tokenABalance
 })
 
-export const updateUNI = uniBalance => ({
-    type: UPDATE_UNI,
-    uniBalance: uniBalance
+export const updateTokenB = tokenBBalance => ({
+    type: UPDATE_TOKEN_B,
+    tokenBBalance: tokenBBalance
 })
 
 export const updateLP = LPBalance => ({
@@ -50,12 +50,12 @@ export const updateAddInput2 = addInput2 => ({
     addInput2: addInput2
 })
 
-export const updateInputTokenAddress = inputTokenAddress => ({
-    type: UPDATE_INPUT_TOKEN_ADDRESS,
-    inputTokenAddress: inputTokenAddress
+export const updateTokenAAddress = tokenAAddress => ({
+    type: UPDATE_TOKEN_A_ADDRESS,
+    tokenAAddress: tokenAAddress
 })
 
-export const updateOutputTokenAddress = outputTokenAddress => ({
-    type: UPDATE_OUTPUT_TOKEN_ADDRESS,
-    outputTokenAddress: outputTokenAddress
+export const updateTokenBAddress = tokenBAddress => ({
+    type: UPDATE_TOKEN_B_ADDRESS,
+    tokenBAddress: tokenBAddress
 })
