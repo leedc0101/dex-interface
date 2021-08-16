@@ -3,7 +3,7 @@ import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import { Pair, Token, WETH, FACTORY_ADDRESS, INIT_CODE_HASH } from "@uniswap/sdk"
 import {TOKEN_ADDRESS, ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
-import {updateETH, updateUNI} from "../actions";
+import {updateTokenA, updateTokenB} from "../actions";
 import { pack, keccak256 } from "@ethersproject/solidity";
 import { getCreate2Address } from "@ethersproject/address";
 import {useDispatch, useSelector} from "react-redux";
@@ -64,9 +64,9 @@ function RemoveLiquidityButton() {
                 setPending(true)
                 result.wait().then( () => {
                     tokenContract.balanceOf(account)
-                        .then((result) => dispatch(updateUNI(ethers.utils.formatEther(result))))
+                        .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
                     library.getBalance(account)
-                        .then((result) => dispatch(updateETH(ethers.utils.formatEther(result))))
+                        .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
                     setPending(false)
                 })
             })
