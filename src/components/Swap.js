@@ -9,13 +9,10 @@ import {BorderWrap, Text} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 
 
-/////////  Redux 로 approve랑 pending을 바꿔보자
-
-
 function Swap() {
     const { chainId, account, library } = useWeb3React()
 
-    const pending = false
+    const [pending, setPending] = useState(false)
     const [approvedA, setApprovedA] = useState(false)
     const [approvedB, setApprovedB] = useState(false)
 
@@ -50,7 +47,7 @@ function Swap() {
     if(tokenAContract !== undefined)
         tokenAContract.allowance(account, ROUTER_ADDRESS)
             .then(result => {
-                if( result >= MaxUint256.div(100))
+                if( ethers.utils.formatEther(result) >= ethers.utils.formatEther(MaxUint256.div(100)))
                     !approvedA && setApprovedA(true)
             })
     else
@@ -59,7 +56,7 @@ function Swap() {
     if(tokenBContract !== undefined)
         tokenBContract.allowance(account, ROUTER_ADDRESS)
             .then(result => {
-                if( result >= MaxUint256.div(100))
+                if( ethers.utils.formatEther(result) >= ethers.utils.formatEther(MaxUint256.div(100)))
                     !approvedB && setApprovedB(true)
             })
     else
@@ -68,7 +65,9 @@ function Swap() {
     function approveA() {
         tokenAContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
+                setPending(true)
                 result.wait().then(() => {
+                    setPending(false)
                     setApprovedA(true)
                 })
             })
@@ -77,7 +76,9 @@ function Swap() {
     function approveB() {
         tokenBContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
+                setPending(true)
                 result.wait().then(() => {
+                    setPending(false)
                     setApprovedB(true)
                 })
             })
@@ -86,12 +87,13 @@ function Swap() {
     function swapExactTokensForTokens(): Promise<Pair> {
         routerContract.swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline, {gasLimit: ethers.utils.hexlify(250000), gasPrice: ethers.utils.parseUnits('5', "gwei")})
             .then( (result) => {
+                setPending(true)
                 result.wait().then( () => {
                     library.getBalance(account)
                         .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
                     library.getBalance(account)
                         .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
-
+                    setPending(false)
                     dispatch(updateSwapInput('0'))
                 })
             })
@@ -100,6 +102,7 @@ function Swap() {
     function swapExactETHForTokens(): Promise<Pair> {
         routerContract.swapExactETHForTokens(amountOutMin, path, to, deadline, {value: amountIn, gasLimit: ethers.utils.hexlify(250000), gasPrice: ethers.utils.parseUnits('5', "gwei") })
             .then( (result) => {
+                setPending(true)
                 result.wait().then( () => {
                     if(tokenAAddress !== WETH[chainId].address)
                         tokenAContract.balanceOf(account)
@@ -114,13 +117,13 @@ function Swap() {
                     else
                         library.getBalance(account)
                             .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
+                    setPending(false)
                     dispatch(updateSwapInput('0'))
                 })
             })
     }
 
     const onClick = tokenAContract !== undefined && tokenBContract !== undefined ?  swapExactTokensForTokens : swapExactETHForTokens
-    console.log(onClick)
 
     function inputOnChange(e){
         if(e.target.value.length !== 0)
