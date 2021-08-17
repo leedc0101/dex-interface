@@ -29,7 +29,7 @@ function TokenAddressInput() {
                 dispatch(updateTokenBAddress(e.target.value))
             } catch {
                 if(e.target.value === "eth")
-                    dispatch(updateTokenAAddress(WETH[chainId].address))
+                    dispatch(updateTokenBAddress(WETH[chainId].address))
             }
         }
     }
