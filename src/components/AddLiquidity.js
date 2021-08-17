@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
-import { Pair } from "@uniswap/sdk"
+import {Pair, WETH} from "@uniswap/sdk"
 import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import { updateAddInput, updateAddInput2, updateTokenA, updateTokenB} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,21 +10,22 @@ import {MaxUint256} from '@ethersproject/constants'
 
 function AddLiquidityButton() {
     const dispatch = useDispatch()
-    const { account, library } = useWeb3React()
+    const { account, chainId, library } = useWeb3React()
 
-    const [approved, setApproved] = useState(false)
+    const [approvedA, setApprovedA] = useState(false)
+    const [approvedB, setApprovedB] = useState(false)
     const [pending, setPending] = useState(false)
 
     const input = useSelector(state => state?.addInput)
     const input2 = useSelector(state => state?.addInput2)
+    const tokenAAddress = useSelector(state => state?.tokenAAddress)
     const tokenBAddress = useSelector(state => state?.tokenBAddress)
-    console.log(tokenBAddress)
 
     const signer = library?.getSigner(account).connectUnchecked()
-    const tokenContract = new ethers.Contract(tokenBAddress, ERC20_ABI, signer)
+    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, library)
+    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, library)
     const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
 
-    const token = tokenBAddress
     const amountIn = input !== undefined ? ethers.utils.parseEther(input) : undefined
     const amountTokenDesired = input2 !== undefined ? ethers.utils.parseEther(input2) : undefined
     const amountTokenMin = '0'
@@ -32,36 +33,98 @@ function AddLiquidityButton() {
     const to = account // Send to myself
     const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
 
-    tokenContract.allowance(account, ROUTER_ADDRESS)
-        .then(result => {
-            if( result >= MaxUint256.div(100))
-                setApproved(true)
-        })
+    if(tokenAContract !== undefined)
+        tokenAContract.allowance(account, ROUTER_ADDRESS)
+            .then(result => {
+                if( ethers.utils.formatEther(result) >= ethers.utils.formatEther(MaxUint256.div(100)))
+                    !approvedA && setApprovedA(true)
+            })
+    else
+        !approvedA && setApprovedA(true)
 
-    function approve() {
-        tokenContract.approve(ROUTER_ADDRESS, MaxUint256)
+    if(tokenBContract !== undefined)
+        tokenBContract.allowance(account, ROUTER_ADDRESS)
+            .then(result => {
+                if( ethers.utils.formatEther(result) >= ethers.utils.formatEther(MaxUint256.div(100)))
+                    !approvedB && setApprovedB(true)
+            })
+    else
+        !approvedB && setApprovedB(true)
+
+    function approveA() {
+        tokenAContract.approve(ROUTER_ADDRESS, MaxUint256)
             .then((result) => {
                 setPending(true)
                 result.wait().then(() => {
                     setPending(false)
-                    setApproved(true)
+                    setApprovedA(true)
+                })
+            })
+    }
+
+    function approveB() {
+        tokenBContract.approve(ROUTER_ADDRESS, MaxUint256)
+            .then((result) => {
+                setPending(true)
+                result.wait().then(() => {
+                    setPending(false)
+                    setApprovedB(true)
                 })
             })
     }
 
     function addLiquidity(): Promise<Pair> {
-        routerContract.addLiquidityETH(token, amountTokenDesired, amountTokenMin, amountETHMin, to, deadline, {value: amountIn, gasLimit: 1000000})
-            .then( (result) => {
+        routerContract.addLiquidity(
+            tokenAAddress,
+            tokenBAddress,
+            amountIn,
+            amountTokenDesired,
+            '0',
+            '0',
+            to,
+            deadline,
+            {gasLimit: ethers.utils.hexlify(250000), gasPrice: ethers.utils.parseUnits('5', "gwei")}
+        ).then((result) => {
+            setPending(true)
+            result.wait().then(()=>{
+                tokenAContract.balanceOf(account)
+                    .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
+                tokenBContract.balanceOf(account)
+                    .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
+                setPending(false)
+            })
+        })
+    }
+
+    function addLiquidityETH(): Promise<Pair> {
+        routerContract.addLiquidityETH(
+            tokenAContract === undefined ? tokenBAddress : tokenAAddress,
+            amountTokenDesired,
+            amountTokenMin,
+            amountETHMin,
+            to,
+            deadline,
+            {value: amountIn, gasLimit: ethers.utils.hexlify(250000), gasPrice: ethers.utils.parseUnits('5', "gwei")}
+        ).then((result) => {
                 setPending(true)
                 result.wait().then( () => {
-                    tokenContract.balanceOf(account)
-                        .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
-                    library.getBalance(account)
-                        .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
+                    if(tokenAContract === undefined){
+                        tokenBContract.balanceOf(account)
+                            .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
+                        library.getBalance(account)
+                            .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
+                    } else {
+                        tokenAContract.balanceOf(account)
+                            .then((result) => dispatch(updateTokenA(ethers.utils.formatEther(result))))
+                        library.getBalance(account)
+                            .then((result) => dispatch(updateTokenB(ethers.utils.formatEther(result))))
+                    }
                     setPending(false)
                 })
             })
     }
+
+    const onClick = tokenAContract === undefined || tokenBContract === undefined ? addLiquidityETH : addLiquidity
 
     function inputOnChange(e){
         if(e.target.value.length !== 0)
@@ -100,15 +163,29 @@ function AddLiquidityButton() {
                             </Text>
                         </label>
                     </form>
-                    { approved ? (
-                        <button style={{color:"green"}} type="button" onClick={addLiquidity}>
+                    { approvedA && approvedB ? (
+                        <button style={{color:"green"}} type="button" onClick={onClick}>
                             Add Liquidity
                         </button>
                     ):(
-                        <button style={{color:"red"}} type="button" onClick={approve}>
-                            Approve
-                        </button>
-                    )}
+                        approvedA ?
+                            <button style={{color:"red"}} type="button" onClick={approveB}>
+                                Approve B
+                            </button>
+                            : approvedB ?
+                            <button style={{color:"red"}} type="button" onClick={approveA}>
+                                Approve A
+                            </button> :
+                            <>
+                                <button style={{color:"red"}} type="button" onClick={approveA}>
+                                    Approve A
+                                </button>
+                                <button style={{color:"red"}} type="button" onClick={approveB}>
+                                    Approve B
+                                </button>
+                            </>
+                    )
+                    }
                 </>
             ) : (
                 <button style={{color:"pink"}}>
