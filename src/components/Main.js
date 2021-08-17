@@ -6,10 +6,13 @@ import Account from "./Account";
 import Swap from "./Swap";
 import AddLiquidityButton from "./AddLiquidity";
 import RemoveLiquidityButton from "./RemoveLiquidity";
+import {useSelector} from "react-redux";
 
 
 function Main() {
     const { library, activate } = useWeb3React()
+    const tokenAAddress = useSelector(state => state?.tokenAAddress)
+    const tokenBAddress = useSelector(state => state?.tokenBAddress)
 
     const onClick = function () {
         activate(injectedConnector)
@@ -23,9 +26,13 @@ function Main() {
             {library ? (
                 <Wrap style={{gap:"30px"}}>
                     <Account/>
-                    <Swap/>
-                    <AddLiquidityButton/>
-                    <RemoveLiquidityButton/>
+                    { tokenAAddress !== "" && tokenBAddress !== "" ? (
+                        <>
+                            <Swap/>
+                            <AddLiquidityButton/>
+                            <RemoveLiquidityButton/>
+                        </>
+                        ) : (<></>)  }
                 </Wrap>
             ) : (
                 <button type="button" onClick={onClick}>
