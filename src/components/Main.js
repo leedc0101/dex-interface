@@ -21,7 +21,7 @@ function Main() {
 
     return (
         <>
-            <Text style={{fontSize: '20px'}}>
+            <Text style={{fontSize: '30px'}}>
                 Dong Chang Swap
             </Text>
             {library ? (
