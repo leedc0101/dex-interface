@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/web3react-practice/static/js/main.53445f23.chunk.js",
-    "main.js.map": "/web3react-practice/static/js/main.53445f23.chunk.js.map",
+    "main.js": "/web3react-practice/static/js/main.c9d6bef8.chunk.js",
+    "main.js.map": "/web3react-practice/static/js/main.c9d6bef8.chunk.js.map",
     "runtime-main.js": "/web3react-practice/static/js/runtime-main.589826c3.js",
     "runtime-main.js.map": "/web3react-practice/static/js/runtime-main.589826c3.js.map",
     "static/js/2.9da98347.chunk.js": "/web3react-practice/static/js/2.9da98347.chunk.js",
@@ -12,6 +12,6 @@
   "entrypoints": [
     "static/js/runtime-main.589826c3.js",
     "static/js/2.9da98347.chunk.js",
-    "static/js/main.53445f23.chunk.js"
+    "static/js/main.c9d6bef8.chunk.js"
   ]
 }
