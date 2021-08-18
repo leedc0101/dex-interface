@@ -4,6 +4,7 @@ import {useWeb3React} from "@web3-react/core";
 import {useSelector} from "react-redux";
 import TokenAddressInput from "./TokenAddressInput";
 import TokenBalance from "./TokenBalance";
+import LiquidityInfo from "./LiquidityInfo";
 
 function Account() {
     const { chainId, account } = useWeb3React()
@@ -16,7 +17,14 @@ function Account() {
             <Text style={{marginTop:'15px'}}>ChainId: {chainId}</Text>
             <Text style={{marginBottom:'15px'}}>Account: {account}</Text>
             <TokenAddressInput/>
-            { tokenAAddress === "" || tokenBAddress === "" ?  <></> : <TokenBalance/> }
+            { tokenAAddress === "" || tokenBAddress === "" ? (
+                <></>
+            ) : (
+                <>
+                    <TokenBalance/>
+                    <LiquidityInfo/>
+                </>
+            ) }
         </Wrap>
     )
 }
