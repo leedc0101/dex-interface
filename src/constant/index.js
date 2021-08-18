@@ -10,6 +10,7 @@ export const ROUTER_ABI = [
 ]
 export const ERC20_ABI = [
     'function balanceOf(address account) external view returns (uint)',
+    'function totalSupply() external view returns (uint)',
     'function approve(address spender, uint rawAmount) external returns (bool)',
     'function allowance(address owner, address spender) public view returns (uint256)',
     'function decimals() public view returns (uint8)'
