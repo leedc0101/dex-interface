@@ -5,7 +5,7 @@ import {Pair, WETH} from "@uniswap/sdk"
 import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import {updateTokenA, updateSwapExpect, updateSwapInput, updateTokenB} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
-import {BorderWrap, Text} from "./style";
+import {BorderWrap, HeaderText, Text} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 
 
@@ -134,9 +134,9 @@ function Swap() {
 
     return (
         <BorderWrap style={{marginTop:"10px", border:"2px solid"}}>
-            <Text>
-                ------Swap------
-            </Text>
+            <HeaderText>
+                스왑
+            </HeaderText>
             { !pending ? (
                 <>
                     <form>
