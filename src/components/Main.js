@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {useWeb3React} from "@web3-react/core";
 import {injectedConnector} from "../connector/connector";
 import {Text, Wrap} from "./style";
@@ -7,6 +7,7 @@ import Swap from "./Swap";
 import AddLiquidityButton from "./AddLiquidity";
 import RemoveLiquidityButton from "./RemoveLiquidity";
 import {useSelector} from "react-redux";
+import {useTabs} from "../hooks";
 
 
 function Main() {
@@ -15,30 +16,12 @@ function Main() {
     const tokenBAddress = useSelector(state => state?.tokenBAddress)
 
     const contentList = [
-        {
-            tab: "Swap",
-            content: <Swap/>
-        },
-        {
-            tab: "Add",
-            content: <AddLiquidityButton/>
-        },
-        {
-            tab: "Remove",
-            content: <RemoveLiquidityButton/>
-        }
+        { tab: "Swap", content: <Swap/> },
+        { tab: "Add", content: <AddLiquidityButton/> },
+        { tab: "Remove", content: <RemoveLiquidityButton/> }
     ]
 
-    const useTabs = (initialTabs, allTabs) => {
-        const [contentIndex, setContentIndex] = useState(initialTabs)
-        return {
-            contentItem: allTabs[contentIndex],
-            contentChange: setContentIndex
-        }
-    }
-
-     const {contentItem, contentChange} = useTabs(0, contentList)
-
+    const { contentItem, contentChange } = useTabs(0, contentList)
 
     const onClick = function () {
         activate(injectedConnector)
