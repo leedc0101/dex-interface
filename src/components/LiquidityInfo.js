@@ -39,7 +39,7 @@ function LiquidityInfo() {
         })
 
     const ratio = LPBalance / total * 100
-    const ratioFixed = ratio >= 0.01 ? ratio.toFixed(2) : ">0.01"
+    const ratioFixed = ratio >= 0.01 ? ratio.toFixed(2) : "less than 0.01"
 
     return(
         <BorderWrap>
