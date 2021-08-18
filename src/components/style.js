@@ -28,5 +28,5 @@ export const HeaderText = styled.div`
   text-align: center;
   font-size: 17px;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: 500;
 `
