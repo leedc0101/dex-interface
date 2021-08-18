@@ -39,7 +39,7 @@ function TokenAddressInput() {
             <form>
                 <label>
                     <Text>
-                        Token A Address :
+                        토큰 A 주소 :
                         <input type="text" onChange={tokenAOnChange}/>
                     </Text>
                 </label>
@@ -47,7 +47,7 @@ function TokenAddressInput() {
             <form>
                 <label>
                     <Text>
-                        Token B Address :
+                        토큰 B 주소 :
                         <input type="text" onChange={tokenBOnChange}/>
                     </Text>
                 </label>

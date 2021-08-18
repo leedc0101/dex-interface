@@ -1,4 +1,4 @@
-import {BorderWrap, Text} from "./style";
+import {BorderWrap, HeaderText, Text} from "./style";
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useWeb3React} from "@web3-react/core";
@@ -72,10 +72,10 @@ function TokenBalance() {
 
     return (
         <BorderWrap>
-            <Text>-----Balance Info-----</Text>
-            <Text>Token A Balance: {tokenABalance}</Text>
-            <Text>Token B Balance: {tokenBBalance}</Text>
-            <Text>Liquidity Token Amount : {LPBalance}</Text>
+            <HeaderText>잔액 정보</HeaderText>
+            <Text>토큰 A 잔액: {tokenABalance}</Text>
+            <Text>토큰 B 잔액: {tokenBBalance}</Text>
+            <Text>유동성 토큰 잔액 : {LPBalance}</Text>
         </BorderWrap>
     )
 }

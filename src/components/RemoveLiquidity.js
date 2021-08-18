@@ -7,7 +7,7 @@ import {updateTokenA, updateTokenB} from "../actions";
 import { pack, keccak256 } from "@ethersproject/solidity";
 import { getCreate2Address } from "@ethersproject/address";
 import {useDispatch, useSelector} from "react-redux";
-import {BorderWrap, Text} from "./style";
+import {BorderWrap, HeaderText} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 
 function RemoveLiquidityButton() {
@@ -113,9 +113,9 @@ function RemoveLiquidityButton() {
 
     return (
         <BorderWrap>
-            <Text>
-                ------Remove Liquidity------
-            </Text>
+            <HeaderText>
+                유동성 제거
+            </HeaderText>
             { !pending ?  (approved ? (
                 <button style={{color:"green"}} type="button" onClick={onClick}>
                     Remove Liquidity

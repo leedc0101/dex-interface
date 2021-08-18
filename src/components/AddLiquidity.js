@@ -5,7 +5,7 @@ import {Pair, WETH} from "@uniswap/sdk"
 import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
 import { updateAddInput, updateAddInput2, updateTokenA, updateTokenB} from "../actions";
 import {useDispatch, useSelector} from "react-redux";
-import {BorderWrap, Text} from "./style";
+import {BorderWrap, HeaderText, Text} from "./style";
 import {MaxUint256} from '@ethersproject/constants'
 
 function AddLiquidityButton() {
@@ -142,9 +142,9 @@ function AddLiquidityButton() {
 
     return (
         <BorderWrap>
-            <Text>
-                ------Add Liquidity------
-            </Text>
+            <HeaderText>
+                유동성 공급
+            </HeaderText>
             { !pending ? (
                 <>
                     <form>
