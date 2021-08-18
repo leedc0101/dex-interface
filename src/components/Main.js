@@ -6,14 +6,12 @@ import Account from "./Account";
 import Swap from "./Swap";
 import AddLiquidityButton from "./AddLiquidity";
 import RemoveLiquidityButton from "./RemoveLiquidity";
-import {useSelector} from "react-redux";
-import {useTabs} from "../hooks";
-
+import {useTabs, useTokenAddress} from "../hooks";
 
 function Main() {
     const { library, activate } = useWeb3React()
-    const tokenAAddress = useSelector(state => state?.tokenAAddress)
-    const tokenBAddress = useSelector(state => state?.tokenBAddress)
+
+    const { tokenAAddress, tokenBAddress } = useTokenAddress()
 
     const contentList = [
         { tab: "Swap", content: <Swap/> },

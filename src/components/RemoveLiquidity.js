@@ -1,41 +1,26 @@
 import React, {useState} from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
-import { Pair, Token, WETH, FACTORY_ADDRESS, INIT_CODE_HASH } from "@uniswap/sdk"
-import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
+import { Pair } from "@uniswap/sdk"
+import {ROUTER_ADDRESS} from "../constant";
 import {updateTokenA, updateTokenB} from "../actions";
-import { pack, keccak256 } from "@ethersproject/solidity";
-import { getCreate2Address } from "@ethersproject/address";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {BorderWrap, HeaderText} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
+import {usePairContract, useRouterContract, useTokenAddress, useTokenBalance, useTokenContract} from "../hooks";
 
 function RemoveLiquidityButton() {
-    const { chainId, account, library } = useWeb3React()
+    const dispatch = useDispatch()
+
+    const { account, library } = useWeb3React()
+    const { LPBalance } = useTokenBalance()
+    const { tokenAAddress, tokenBAddress } = useTokenAddress()
+    const { pairTokenContract } = usePairContract()
+    const { tokenAContract, tokenBContract } = useTokenContract()
+    const { routerContract } = useRouterContract()
 
     const [pending, setPending] = useState(false)
     const [approved, setApproved] = useState(false)
-
-    const dispatch = useDispatch()
-    const LPBalance = useSelector((state) => state?.LPBalance )
-    const tokenAAddress = useSelector(state => state?.tokenAAddress)
-    const tokenBAddress = useSelector(state => state?.tokenBAddress)
-
-    const signer = library?.getSigner(account).connectUnchecked()
-    const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
-    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, library)
-    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, library)
-
-    const tokenA = new Token(chainId, tokenAAddress, 18)
-    const tokenB = new Token(chainId, tokenBAddress, 18)
-    const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-    const pair = getCreate2Address(
-        FACTORY_ADDRESS,
-        keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
-        INIT_CODE_HASH
-    )
-
-    const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, signer)
 
     pairTokenContract.allowance(account, ROUTER_ADDRESS)
         .then(result => {

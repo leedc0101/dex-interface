@@ -1,30 +1,26 @@
 import React, {useState} from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
-import {Pair, WETH} from "@uniswap/sdk"
-import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
+import {Pair} from "@uniswap/sdk"
+import {ROUTER_ADDRESS} from "../constant";
 import { updateAddInput, updateAddInput2, updateTokenA, updateTokenB} from "../actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {BorderWrap, HeaderText, Text} from "./style";
 import {MaxUint256} from '@ethersproject/constants'
+import {useAddLiquidityInput, useRouterContract, useTokenAddress, useTokenContract} from "../hooks";
 
 function AddLiquidityButton() {
     const dispatch = useDispatch()
-    const { account, chainId, library } = useWeb3React()
+
+    const { account, library } = useWeb3React()
+    const { tokenAAddress, tokenBAddress } = useTokenAddress()
+    const { input, input2 } = useAddLiquidityInput()
+    const { tokenAContract, tokenBContract } = useTokenContract()
+    const { routerContract } = useRouterContract()
 
     const [approvedA, setApprovedA] = useState(false)
     const [approvedB, setApprovedB] = useState(false)
     const [pending, setPending] = useState(false)
-
-    const input = useSelector(state => state?.addInput)
-    const input2 = useSelector(state => state?.addInput2)
-    const tokenAAddress = useSelector(state => state?.tokenAAddress)
-    const tokenBAddress = useSelector(state => state?.tokenBAddress)
-
-    const signer = library?.getSigner(account).connectUnchecked()
-    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, library)
-    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, library)
-    const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
 
     const amountIn = input !== undefined ? ethers.utils.parseEther(input) : undefined
     const amountTokenDesired = input2 !== undefined ? ethers.utils.parseEther(input2) : undefined

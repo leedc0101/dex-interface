@@ -2,11 +2,12 @@ import React, {useState} from "react";
 import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import {Pair, WETH} from "@uniswap/sdk"
-import {ROUTER_ADDRESS, ROUTER_ABI, ERC20_ABI} from "../constant";
+import {ROUTER_ADDRESS} from "../constant";
 import {updateTokenA, updateSwapExpect, updateSwapInput, updateTokenB} from "../actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {BorderWrap, HeaderText, Text} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
+import {useRouterContract, useSwapInput, useTokenAddress, useTokenContract} from "../hooks";
 
 
 function Swap() {
@@ -17,17 +18,11 @@ function Swap() {
     const [approvedB, setApprovedB] = useState(false)
 
     const dispatch = useDispatch()
-    const input = useSelector(state => state?.swapInput)
-    const expect = useSelector(state => state?.swapExpect)
-    const tokenAAddress = useSelector(state => state?.tokenAAddress)
-    const tokenBAddress = useSelector(state => state?.tokenBAddress)
 
-
-    const signer = library.getSigner(account).connectUnchecked()
-    const routerContract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer) // create contract instance
-
-    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, library)
-    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, library)
+    const { input, expect } = useSwapInput()
+    const { tokenAAddress, tokenBAddress } = useTokenAddress()
+    const { tokenAContract, tokenBContract } = useTokenContract()
+    const { routerContract } = useRouterContract()
 
     const amountIn = input !== undefined ? ethers.utils.parseEther(input) : undefined
     const path = [tokenAAddress, tokenBAddress]
