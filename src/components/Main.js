@@ -7,6 +7,7 @@ import Swap from "./Swap";
 import AddLiquidityButton from "./AddLiquidity";
 import RemoveLiquidityButton from "./RemoveLiquidity";
 import {useSelector} from "react-redux";
+import LiquidityInfo from "./LiquidityInfo";
 
 
 function Main() {
@@ -31,6 +32,7 @@ function Main() {
                             <Swap/>
                             <AddLiquidityButton/>
                             <RemoveLiquidityButton/>
+                            <LiquidityInfo/>
                         </>
                         ) : (<></>)  }
                 </Wrap>
