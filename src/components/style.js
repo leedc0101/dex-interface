@@ -16,7 +16,8 @@ export const BorderWrap = styled.div`
   border: 2px solid;
   width: 100%;
   border-radius: 8px;
-  padding: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 `
 
 export const Text = styled.div`
