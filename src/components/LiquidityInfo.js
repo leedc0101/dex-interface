@@ -43,7 +43,7 @@ function LiquidityInfo() {
 
     return(
         <BorderWrap>
-            <HeaderText>-------Pool 정보-------</HeaderText>
+            <HeaderText>Pool 정보</HeaderText>
             <Text>유동성 보유 비율  : {ratioFixed}%</Text>
         </BorderWrap>
     )
