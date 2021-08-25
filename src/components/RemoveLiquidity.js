@@ -5,7 +5,7 @@ import { Pair } from "@uniswap/sdk"
 import {ROUTER_ADDRESS} from "../constant";
 import {updateTokenA, updateTokenB} from "../actions";
 import {useDispatch} from "react-redux";
-import {BorderWrap, HeaderText} from "./style";
+import Pending, {BorderWrap, HeaderText, StyledButton} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 import {usePairContract, useRouterContract, useTokenAddress, useTokenBalance, useTokenContract} from "../hooks";
 
@@ -102,17 +102,15 @@ function RemoveLiquidityButton() {
                 유동성 제거
             </HeaderText>
             { !pending ?  (approved ? (
-                <button style={{color:"green"}} type="button" onClick={onClick}>
+                <StyledButton type="button" onClick={onClick}>
                     Remove Liquidity
-                </button>
+                </StyledButton>
             ) : (
-                <button style={{color:"red"}} type="button" onClick={approve}>
+                <StyledButton style={{color:"green"}} type="button" onClick={approve}>
                     Approve
-                </button>
+                </StyledButton>
             )) : (
-                <button style={{color:"pink"}} >
-                    Pending...
-                </button>
+                <Pending/>
             )}
         </BorderWrap>
     )

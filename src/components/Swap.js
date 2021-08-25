@@ -5,25 +5,24 @@ import {Pair, WETH} from "@uniswap/sdk"
 import {ROUTER_ADDRESS} from "../constant";
 import {updateTokenA, updateSwapExpect, updateSwapInput, updateTokenB} from "../actions";
 import {useDispatch} from "react-redux";
-import {BorderWrap, HeaderText, Text} from "./style";
+import Pending, {BorderWrap, HeaderText, StyledButton, StyledInput, Text} from "./style";
 import {MaxUint256} from "@ethersproject/constants";
 import {useRouterContract, useSwapInput, useTokenAddress, useTokenContract} from "../hooks";
 
 
 function Swap() {
-    const { chainId, account, library } = useWeb3React()
-
-    const [pending, setPending] = useState(false)
-    const [approvedA, setApprovedA] = useState(false)
-    const [approvedB, setApprovedB] = useState(false)
-
     const dispatch = useDispatch()
 
+    const { chainId, account, library } = useWeb3React()
     const { input, expect } = useSwapInput()
     const { tokenAAddress, tokenBAddress } = useTokenAddress()
     const { tokenAContract, tokenBContract } = useTokenContract()
     const { routerContract } = useRouterContract()
 
+    const [pending, setPending] = useState(false)
+    const [approvedA, setApprovedA] = useState(false)
+    const [approvedB, setApprovedB] = useState(false)
+    
     const amountIn = input !== undefined ? ethers.utils.parseEther(input) : undefined
     const path = [tokenAAddress, tokenBAddress]
     const amountOutMin = '0'
@@ -128,7 +127,7 @@ function Swap() {
     }
 
     return (
-        <BorderWrap style={{marginTop:"10px", border:"2px solid"}}>
+        <BorderWrap style={{marginTop:"10px"}}>
             <HeaderText>
                 스왑
             </HeaderText>
@@ -138,7 +137,7 @@ function Swap() {
                         <label>
                             <Text>
                                 Input :
-                                <input type="text" onChange={inputOnChange}/>
+                                <StyledInput type="text" onChange={inputOnChange}/>
                             </Text>
                         </label>
                     </form>
@@ -146,33 +145,31 @@ function Swap() {
                         Output : {expect}
                     </Text>
                     { approvedA && approvedB ? (
-                        <button style={{color:"green"}} type="button" onClick={onClick}>
+                        <StyledButton type="button" onClick={onClick}>
                             Swap
-                        </button>
+                        </StyledButton>
                     ):(
                         approvedA ?
-                            <button style={{color:"red"}} type="button" onClick={approveB}>
-                                Approve B
-                            </button>
+                            <StyledButton style={{color:"green"}} type="button" onClick={approveB}>
+                                B 승인
+                            </StyledButton>
                             : approvedB ?
-                            <button style={{color:"red"}} type="button" onClick={approveA}>
-                                Approve A
-                            </button> :
+                            <StyledButton style={{color:"green"}} type="button" onClick={approveA}>
+                                A 승인
+                            </StyledButton> :
                             <>
-                                <button style={{color:"red"}} type="button" onClick={approveA}>
-                                    Approve A
-                                </button>
-                                <button style={{color:"red"}} type="button" onClick={approveB}>
-                                Approve B
-                                </button>
+                                <StyledButton style={{color:"green"}} type="button" onClick={approveA}>
+                                    A 승인
+                                </StyledButton>
+                                <StyledButton style={{color:"green"}} type="button" onClick={approveB}>
+                                    B 승인
+                                </StyledButton>
                             </>
                         )
                     }
                 </>
             ) : (
-                <Text>
-                    Pending...
-                </Text>
+                <Pending/>
             )}
         </BorderWrap>
     )

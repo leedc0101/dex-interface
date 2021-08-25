@@ -3,9 +3,9 @@ import {useWeb3React} from "@web3-react/core";
 import { ethers } from 'ethers'
 import {Pair} from "@uniswap/sdk"
 import {ROUTER_ADDRESS} from "../constant";
-import { updateAddInput, updateAddInput2, updateTokenA, updateTokenB} from "../actions";
+import {updateAddInput, updateAddInput2, updateTokenA, updateTokenB} from "../actions";
 import {useDispatch} from "react-redux";
-import {BorderWrap, HeaderText, Text} from "./style";
+import Pending, {BorderWrap, HeaderText, StyledButton, StyledInput, Text} from "./style";
 import {MaxUint256} from '@ethersproject/constants'
 import {useAddLiquidityInput, useRouterContract, useTokenAddress, useTokenContract} from "../hooks";
 
@@ -28,6 +28,16 @@ function AddLiquidityButton() {
     const amountETHMin = '0'
     const to = account // Send to myself
     const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
+    const path = [tokenAAddress, tokenBAddress]
+
+    if(amountIn !== undefined && !amountIn.eq(0)){
+        routerContract.getAmountsOut(amountIn, path, {gasLimit:10000000})
+            .then((result)=>{
+                dispatch(updateAddInput2(ethers.utils.formatEther(result[1])))
+            })
+    } else {
+        dispatch(updateAddInput2('0'))
+    }
 
     if(tokenAContract !== undefined)
         tokenAContract.allowance(account, ROUTER_ADDRESS)
@@ -147,7 +157,7 @@ function AddLiquidityButton() {
                         <label>
                             <Text>
                                 Token A Input :
-                                <input type="text" onChange={inputOnChange}/>
+                                <StyledInput type="text" onChange={inputOnChange}/>
                             </Text>
                         </label>
                     </form>
@@ -155,38 +165,36 @@ function AddLiquidityButton() {
                         <label>
                             <Text>
                                 Token B Input :
-                                <input type="text" onChange={inputOnChange2}/>
+                                <StyledInput type="text" value={input2} onChange={inputOnChange2}/>
                             </Text>
                         </label>
                     </form>
                     { approvedA && approvedB ? (
-                        <button style={{color:"green"}} type="button" onClick={onClick}>
+                        <StyledButton type="button" onClick={onClick}>
                             Add Liquidity
-                        </button>
+                        </StyledButton>
                     ):(
                         approvedA ?
-                            <button style={{color:"red"}} type="button" onClick={approveB}>
+                            <StyledButton style={{color:"green"}} type="button" onClick={approveB}>
                                 Approve B
-                            </button>
+                            </StyledButton>
                             : approvedB ?
-                            <button style={{color:"red"}} type="button" onClick={approveA}>
+                            <StyledButton style={{color:"green"}} type="button" onClick={approveA}>
                                 Approve A
-                            </button> :
+                            </StyledButton> :
                             <>
-                                <button style={{color:"red"}} type="button" onClick={approveA}>
+                                <StyledButton style={{color:"green"}} type="button" onClick={approveA}>
                                     Approve A
-                                </button>
-                                <button style={{color:"red"}} type="button" onClick={approveB}>
+                                </StyledButton>
+                                <StyledButton style={{color:"green"}} type="button" onClick={approveB}>
                                     Approve B
-                                </button>
+                                </StyledButton>
                             </>
                     )
                     }
                 </>
             ) : (
-                <button style={{color:"pink"}}>
-                    Pending...
-                </button>
+                <Pending/>
             )}
         </BorderWrap>
     )

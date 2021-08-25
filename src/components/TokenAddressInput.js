@@ -1,5 +1,5 @@
 import {useDispatch} from "react-redux";
-import {Text} from "./style";
+import {StyledInput, Text} from "./style";
 import React from "react";
 import { updateTokenAAddress, updateTokenBAddress} from "../actions";
 import {useWeb3React} from "@web3-react/core";
@@ -40,7 +40,7 @@ function TokenAddressInput() {
                 <label>
                     <Text>
                         토큰 A 주소 :
-                        <input type="text" onChange={tokenAOnChange}/>
+                        <StyledInput type="text" onChange={tokenAOnChange}/>
                     </Text>
                 </label>
             </form>
@@ -48,7 +48,7 @@ function TokenAddressInput() {
                 <label>
                     <Text>
                         토큰 B 주소 :
-                        <input type="text" onChange={tokenBOnChange}/>
+                        <StyledInput type="text" onChange={tokenBOnChange}/>
                     </Text>
                 </label>
             </form>

@@ -10,13 +10,25 @@ const Wrap = styled.div`
   font-family: 'Spoqa Han Sans Neo', serif;
 `
 
+const AppWrap = styled.div`
+  width: 100vw;
+  height: 100vh;
+  top:0;
+  left:0;
+  position: fixed;
+  background-color: #1a202e;
+  color:white;
+`
+
 function App() {
     return (
-        <Wrap>
-            <AutoColumn gap={"lg"}>
-                <Main />
-            </AutoColumn>
-        </Wrap>
+        <AppWrap>
+            <Wrap>
+                <AutoColumn gap={"lg"}>
+                    <Main />
+                </AutoColumn>
+            </Wrap>
+        </AppWrap>
     )
 }
 

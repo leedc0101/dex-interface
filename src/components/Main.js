@@ -1,7 +1,7 @@
 import React from "react";
 import {useWeb3React} from "@web3-react/core";
 import {injectedConnector} from "../connector/connector";
-import {Text, Wrap} from "./style";
+import {GreyButton, StyledButton, Text, Wrap} from "./style";
 import Account from "./Account";
 import Swap from "./Swap";
 import AddLiquidityButton from "./AddLiquidity";
@@ -10,7 +10,6 @@ import {useTabs, useTokenAddress} from "../hooks";
 
 function Main() {
     const { library, activate } = useWeb3React()
-
     const { tokenAAddress, tokenBAddress } = useTokenAddress()
 
     const contentList = [
@@ -38,11 +37,12 @@ function Main() {
                             <div style={{display:"flex", flexDirection:"column"}}>
                                 <div style={{alignItems:"center", display:"flex"}}>
                                     {contentList.map((section, index) => {
-                                    return(
-                                        <button style={{flexGrow:"1"}} onClick={() => contentChange(index)}>
-                                            {section.tab}
-                                        </button>
-                                    )})}
+                                        return(
+                                            <GreyButton style={{flexGrow:"1"}} onClick={() => contentChange(index)}>
+                                                {section.tab}
+                                            </GreyButton>
+                                        )
+                                    })}
                                 </div>
                                 <div>{contentItem.content}</div>
                             </div>
@@ -50,9 +50,9 @@ function Main() {
                     </div>
                 </Wrap>
             ) : (
-                <button type="button" onClick={onClick}>
+                <StyledButton type="button" onClick={onClick}>
                     Connect
-                </button>
+                </StyledButton>
             )}
         </>
     )
