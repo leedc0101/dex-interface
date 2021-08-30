@@ -69,7 +69,7 @@ export const useTokenDecimals = () => {
 }
 
 export const usePairContract = () => {
-    const { chainId, library } = useWeb3React()
+    const { chainId, library, account } = useWeb3React()
     const { tokenAAddress, tokenBAddress } = useTokenAddress()
     const { tokenAContract, tokenBContract } = useTokenContract()
 
@@ -83,7 +83,9 @@ export const usePairContract = () => {
         INIT_CODE_HASH
     )
 
-    const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, library)
+    const signer = library.getSigner(account).connectUnchecked()
+
+    const pairTokenContract = new ethers.Contract(pair, ERC20_ABI, signer)
 
     return { pairTokenContract }
 }
