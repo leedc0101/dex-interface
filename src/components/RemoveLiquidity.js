@@ -106,7 +106,7 @@ function RemoveLiquidityButton() {
                     Remove Liquidity
                 </StyledButton>
             ) : (
-                <StyledButton style={{color:"green"}} type="button" onClick={approve}>
+                <StyledButton style={{color:"grey"}} type="button" onClick={approve}>
                     Approve
                 </StyledButton>
             )) : (

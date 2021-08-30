@@ -150,18 +150,18 @@ function Swap() {
                         </StyledButton>
                     ):(
                         approvedA ?
-                            <StyledButton style={{color:"green"}} type="button" onClick={approveB}>
+                            <StyledButton style={{color:"grey"}} type="button" onClick={approveB}>
                                 B 승인
                             </StyledButton>
                             : approvedB ?
-                            <StyledButton style={{color:"green"}} type="button" onClick={approveA}>
+                            <StyledButton style={{color:"grey"}} type="button" onClick={approveA}>
                                 A 승인
                             </StyledButton> :
                             <>
-                                <StyledButton style={{color:"green"}} type="button" onClick={approveA}>
+                                <StyledButton style={{color:"grey"}} type="button" onClick={approveA}>
                                     A 승인
                                 </StyledButton>
-                                <StyledButton style={{color:"green"}} type="button" onClick={approveB}>
+                                <StyledButton style={{color:"grey"}} type="button" onClick={approveB}>
                                     B 승인
                                 </StyledButton>
                             </>

@@ -35,8 +35,8 @@ export const HeaderText = styled.div`
 `
 
 export const StyledPending = styled(motion.div)`
-  background-color: #4158D0;
-  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+  background-color: #8EC5FC;
+  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
 
   margin-top: 20px;
   margin-bottom: 20px;
@@ -50,8 +50,8 @@ export const StyledPending = styled(motion.div)`
 `
 
 export const StyledButton = styled.button`
-  background-color: #4158D0;
-  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+  background-color: #8EC5FC;
+  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
 
   border-radius: 8px;
   border: none;
@@ -67,7 +67,7 @@ export const StyledButton = styled.button`
 export const GreyButton = styled(StyledButton)`
   background-color: #6C7284;
   background-image: none;
-  border-radius: 0px;
+  border-radius: 0;
   border:0.2px solid #565A69;
 `
 
