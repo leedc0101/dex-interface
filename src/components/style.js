@@ -67,7 +67,7 @@ export const StyledButton = styled.button`
 export const GreyButton = styled(StyledButton)`
   background-color: #6C7284;
   background-image: none;
-  border-radius: 0;
+  border-radius: 3px;
   border:0.2px solid #565A69;
 `
 
@@ -96,4 +96,27 @@ export const StyledInput = styled.input`
   color:white;
   background:inherit;
   border:none;
+`
+
+export const ModalContainer = styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+`
+
+export const Modal = styled(motion.div)`
+    height: 20%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    z-index: 1;
+    border-radius: 8px;
 `
