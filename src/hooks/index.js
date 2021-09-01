@@ -40,9 +40,10 @@ export const useTokenBalance = () => {
 
 export const useTokenContract = () => {
     const {tokenAAddress, tokenBAddress} = useTokenAddress()
-    const {chainId, library} = useWeb3React()
-    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, library)
-    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, library)
+    const {chainId, library, account} = useWeb3React()
+    const signer = library.getSigner(account).connectUnchecked()
+    const tokenAContract = tokenAAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenAAddress, ERC20_ABI, signer)
+    const tokenBContract = tokenBAddress === WETH[chainId].address ? undefined : new ethers.Contract(tokenBAddress, ERC20_ABI, signer)
 
     return { tokenAContract, tokenBContract }
 }
