@@ -1,4 +1,5 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { TorusConnector } from "@web3-react/torus-connector";
 
 export const injectedConnector = new InjectedConnector({
     supportedChainIds: [
@@ -8,4 +9,15 @@ export const injectedConnector = new InjectedConnector({
         5, // Goerli
         42, // Kovan
     ],
+})
+
+
+export const torusConnector = new TorusConnector({
+    chainId:3,
+    initOptions: {
+        network: {
+            host: 'ropsten',
+            chainId: 3,
+        },
+    },
 })
