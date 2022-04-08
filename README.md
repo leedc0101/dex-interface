@@ -1,6 +1,9 @@
-# Mini Dex using uniswap-v2 protocol
+# DEX using uniswap-v2 protocol
+- Who : leedc0101
+- How : Using React, Web3.js, Redux
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Demo 
+https://leedc0101.github.io/web3react-practice/
 
 ## How to run
 `yarn && yarn start`
