@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/dex-interface/static/js/main.38879073.chunk.js",
-    "main.js.map": "/dex-interface/static/js/main.38879073.chunk.js.map",
-    "runtime-main.js": "/dex-interface/static/js/runtime-main.29e74f04.js",
-    "runtime-main.js.map": "/dex-interface/static/js/runtime-main.29e74f04.js.map",
-    "static/js/2.569b4419.chunk.js": "/dex-interface/static/js/2.569b4419.chunk.js",
-    "static/js/2.569b4419.chunk.js.map": "/dex-interface/static/js/2.569b4419.chunk.js.map",
-    "static/js/3.c42dae2b.chunk.js": "/dex-interface/static/js/3.c42dae2b.chunk.js",
-    "static/js/3.c42dae2b.chunk.js.map": "/dex-interface/static/js/3.c42dae2b.chunk.js.map",
+    "main.js": "/dex-interface/static/js/main.892123ad.chunk.js",
+    "main.js.map": "/dex-interface/static/js/main.892123ad.chunk.js.map",
+    "runtime-main.js": "/dex-interface/static/js/runtime-main.8a445f1c.js",
+    "runtime-main.js.map": "/dex-interface/static/js/runtime-main.8a445f1c.js.map",
+    "static/js/2.2754e39c.chunk.js": "/dex-interface/static/js/2.2754e39c.chunk.js",
+    "static/js/2.2754e39c.chunk.js.map": "/dex-interface/static/js/2.2754e39c.chunk.js.map",
+    "static/js/3.e3955f98.chunk.js": "/dex-interface/static/js/3.e3955f98.chunk.js",
+    "static/js/3.e3955f98.chunk.js.map": "/dex-interface/static/js/3.e3955f98.chunk.js.map",
     "index.html": "/dex-interface/index.html",
-    "static/js/2.569b4419.chunk.js.LICENSE.txt": "/dex-interface/static/js/2.569b4419.chunk.js.LICENSE.txt",
-    "static/js/3.c42dae2b.chunk.js.LICENSE.txt": "/dex-interface/static/js/3.c42dae2b.chunk.js.LICENSE.txt",
+    "static/js/2.2754e39c.chunk.js.LICENSE.txt": "/dex-interface/static/js/2.2754e39c.chunk.js.LICENSE.txt",
+    "static/js/3.e3955f98.chunk.js.LICENSE.txt": "/dex-interface/static/js/3.e3955f98.chunk.js.LICENSE.txt",
     "static/media/close.17a94979.svg": "/dex-interface/static/media/close.17a94979.svg",
     "static/media/torus.c33c813a.png": "/dex-interface/static/media/torus.c33c813a.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.29e74f04.js",
-    "static/js/2.569b4419.chunk.js",
-    "static/js/main.38879073.chunk.js"
+    "static/js/runtime-main.8a445f1c.js",
+    "static/js/2.2754e39c.chunk.js",
+    "static/js/main.892123ad.chunk.js"
   ]
 }
