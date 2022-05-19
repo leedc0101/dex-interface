@@ -5,29 +5,40 @@ import { updateTokenAAddress, updateTokenBAddress } from '../actions';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { WETH } from '@uniswap/sdk';
+import { useTokenAddress } from '../hooks';
 
 function TokenAddressInput() {
   const dispatch = useDispatch();
+  const { tokenAAddress, tokenBAddress } = useTokenAddress();
+  console.log(tokenAAddress, tokenBAddress);
   const { chainId } = useWeb3React();
 
   function tokenAOnChange(e) {
-    if (e.target.value.length !== 0) {
-      try {
+    if (tokenBAddress === e.target.value) return;
+
+    if (e.target.value === 'eth' && tokenBAddress !== WETH[chainId].address) {
+      dispatch(updateTokenAAddress(WETH[chainId].address));
+    } else {
+      if (ethers.utils.isAddress(e.target.value)) {
         ethers.utils.getAddress(e.target.value);
         dispatch(updateTokenAAddress(e.target.value));
-      } catch {
-        if (e.target.value === 'eth') dispatch(updateTokenAAddress(WETH[chainId].address));
+      } else {
+        dispatch(updateTokenAAddress(''));
       }
     }
   }
 
   function tokenBOnChange(e) {
-    if (e.target.value.length !== 0) {
-      try {
+    if (tokenAAddress === e.target.value) return;
+
+    if (e.target.value === 'eth' && tokenAAddress !== WETH[chainId].address) {
+      dispatch(updateTokenBAddress(WETH[chainId].address));
+    } else {
+      if (ethers.utils.isAddress(e.target.value)) {
         ethers.utils.getAddress(e.target.value);
         dispatch(updateTokenBAddress(e.target.value));
-      } catch {
-        if (e.target.value === 'eth') dispatch(updateTokenBAddress(WETH[chainId].address));
+      } else {
+        dispatch(updateTokenBAddress(''));
       }
     }
   }
